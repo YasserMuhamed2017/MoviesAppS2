@@ -20,24 +20,38 @@ import java.util.ArrayList;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder>{
 
-    public ArrayList<String> mArrayListOfThumbnails ;
+    public ArrayList<MovieData> mArrayListOfThumbnails = new ArrayList<>();
+
+    final private MovieAdapterOnClickHandler mMovieListItemClicked ;
+
     Context mContext ;
-    public MovieAdapter(Context context){
+
+    public MovieAdapter(Context context , MovieAdapterOnClickHandler movieAdapterOnClickHandler){
         mContext = context ;
+        mMovieListItemClicked = movieAdapterOnClickHandler;
+    }
+
+    public interface MovieAdapterOnClickHandler{
+        void onListClickItem(String position);
     }
     @Override
     public MovieAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         Context context = parent.getContext();
+
         int listItemMovieShouldPopulated = R.layout.movie_list_item ;
+
         LayoutInflater layoutInflater = LayoutInflater.from(context);
+
         View view = layoutInflater.inflate(listItemMovieShouldPopulated , parent , false);
+
         return new MovieAdapterViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(MovieAdapterViewHolder holder, int position) {
 
-        Picasso.with(mContext).load(mArrayListOfThumbnails.get(position)).into(holder.mPosterImageView);
+        Picasso.with(mContext).load(NetworkUtils.IMAGE_MOVIE_BASE_URL + mArrayListOfThumbnails.get(position).getPosterPath()).into(holder.mPosterImageView);
 
     }
 
@@ -48,22 +62,31 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         return mArrayListOfThumbnails.size();
     }
 
-    public void setImageThumbnail( MovieData movieDataExtracted){
+    public void setImageThumbnail( ArrayList<MovieData> movieDataExtracted){
 
-        String poster_path = movieDataExtracted.getPosterPath();
+//        String poster_path = movieDataExtracted.getPosterPath();
+//
+//        String thumbnail = NetworkUtils.IMAGE_MOVIE_BASE_URL  + poster_path ;
 
-        String thumbnail = NetworkUtils.IMAGE_MOVIE_BASE_URL  + poster_path ;
-
-        mArrayListOfThumbnails.add(thumbnail);
+        mArrayListOfThumbnails = movieDataExtracted ;
 
        notifyDataSetChanged();
     }
 
-    class MovieAdapterViewHolder extends RecyclerView.ViewHolder{
+    class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
         public final ImageView mPosterImageView ;
+
         public MovieAdapterViewHolder(View itemView) {
             super(itemView);
             mPosterImageView = itemView.findViewById(R.id.poster_view);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int viewHolderPosition = getAdapterPosition();
+            mMovieListItemClicked.onListClickItem( NetworkUtils.IMAGE_MOVIE_BASE_URL + mArrayListOfThumbnails.get(viewHolderPosition).getPosterPath());
         }
     }
 }

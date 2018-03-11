@@ -6,15 +6,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 /**
  * Created by Yasser Muhamed on 06/03/2018.
  */
 
 public final class OpenMovieJsonUtils {
 
-   static MovieData mMovieData = new MovieData() ;
 
- public static MovieData extractJSONMovieData(String movieJSONString ) throws JSONException {
+   static ArrayList<MovieData> mMovieDataArrayList = new ArrayList<>();
+
+ public static ArrayList<MovieData> extractJSONMovieData(String movieJSONString ) throws JSONException {
 
      JSONObject root = new JSONObject(movieJSONString);
 
@@ -34,9 +37,11 @@ public final class OpenMovieJsonUtils {
 
          String releaseDate = jsonObject.optString("release_date");
 
-         mMovieData = new MovieData(id , posterPath , overview , voteAverage , releaseDate);
+         MovieData mMovieData = new MovieData(id , posterPath , overview , voteAverage , releaseDate);
+
+         mMovieDataArrayList.add(mMovieData);
      }
-     return mMovieData;
+     return mMovieDataArrayList;
  }
 
 }

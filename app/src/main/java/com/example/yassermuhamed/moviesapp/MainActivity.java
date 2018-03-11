@@ -1,12 +1,15 @@
 package com.example.yassermuhamed.moviesapp;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.example.yassermuhamed.moviesapp.utilities.NetworkUtils;
 import com.example.yassermuhamed.moviesapp.utilities.OpenMovieJsonUtils;
@@ -15,8 +18,9 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler{
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -34,23 +38,44 @@ public class MainActivity extends AppCompatActivity {
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, spanCount);
 
-        mRecyclerView.setLayoutManager(gridLayoutManager);
-
         mRecyclerView.setHasFixedSize(true);
 
-        mMovieAdapter = new MovieAdapter(MainActivity.this);
+        mRecyclerView.setLayoutManager(gridLayoutManager);
+
+        mMovieAdapter = new MovieAdapter(this , this);
 
         mRecyclerView.setAdapter(mMovieAdapter);
 
-        loadMovieData();
+        loadPublicMoviesData();
+
+        //loadTopRatedMoviesData();
+
     }
 
-    private void loadMovieData(){
+    private void loadTopRatedMoviesData(){
+
         String movieData = NetworkUtils.TOP_RATED_MOVIE_BASE_URL ;
+
         new FetchMovieAsyncTask().execute(movieData);
     }
 
-    class FetchMovieAsyncTask extends AsyncTask<String, Void, MovieData> {
+    private void loadPublicMoviesData(){
+        String movieData = NetworkUtils.POPULAR_MOVIE_BASE_URL ;
+        new FetchMovieAsyncTask().execute(movieData);
+    }
+
+    @Override
+    public void onListClickItem(String position) {
+
+        //MovieData movieData = mMovieAdapter.mArrayListOfThumbnails.get(Integer.parseInt(position));
+
+        Intent intent = new Intent(MainActivity.this , MovieDetailsActivity.class);
+        
+
+        startActivity(intent);
+    }
+
+    class FetchMovieAsyncTask extends AsyncTask<String, Void, ArrayList<MovieData> > {
 
         @Override
         protected void onPreExecute() {
@@ -58,16 +83,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected MovieData doInBackground(String... strings) {
+        protected ArrayList<MovieData> doInBackground(String... strings) {
             if (strings.length == 0)
                 return null;
             String url = strings[0];
             URL buildUrlMoviesData = NetworkUtils.buildUrl(url);
-            String dataResponseByHttp = " " ;
 
             try {
 
-                 dataResponseByHttp = NetworkUtils.makeHttpUrlConnection(buildUrlMoviesData);
+                String dataResponseByHttp = NetworkUtils.makeHttpUrlConnection(buildUrlMoviesData);
 
                 return OpenMovieJsonUtils.extractJSONMovieData(dataResponseByHttp);
 
@@ -82,13 +106,31 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(MovieData movieData) {
-            if ( movieData != null){
-                mMovieAdapter.setImageThumbnail(movieData);
+        protected void onPostExecute(ArrayList<MovieData> movieDataArrayList) {
+            if ( movieDataArrayList != null){
+                mMovieAdapter.setImageThumbnail(movieDataArrayList);
             }else {
                 Log.v(TAG , "NULL POINTER EXCEPTION");
                 //Toast.makeText(MainActivity.this, " NULL POINTER EXCEPTION ", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+         getMenuInflater().inflate(R.menu.menu_movie , menu);
+         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+
+            case R.id.movie_public : loadPublicMoviesData(); return true;
+
+            case R.id.movie_top_rated : loadTopRatedMoviesData(); return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

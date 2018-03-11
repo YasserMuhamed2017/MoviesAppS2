@@ -12,9 +12,7 @@ public class MovieData {
     private String mVoteAverage ;
     private String mReleaseDate ;
 
-    public MovieData(){
 
-    }
     public MovieData(String id , String posterPath , String overview , String voteAverage , String releaseDate ){
         mId = id ;
         mPosterPath = posterPath ;
