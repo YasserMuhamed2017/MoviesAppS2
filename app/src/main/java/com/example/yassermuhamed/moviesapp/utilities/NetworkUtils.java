@@ -1,6 +1,9 @@
 package com.example.yassermuhamed.moviesapp.utilities;
 
 import android.net.Uri;
+
+import com.example.yassermuhamed.moviesapp.BuildConfig;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,9 +22,19 @@ public final class NetworkUtils {
 
     public static final String IMAGE_MOVIE_BASE_URL = "http://image.tmdb.org/t/p/w185/" ;
 
-    public static final String TOP_RATED_MOVIE_BASE_URL = "https://api.themoviedb.org/3/movie/top_rated?api_key=4e21e64da6a3965021ffdaba52ad6ace";
+    private static final String API_KEY = BuildConfig.API_KEY;
 
-    public static final String POPULAR_MOVIE_BASE_URL = "https://api.themoviedb.org/3/movie/popular?api_key=4e21e64da6a3965021ffdaba52ad6ace";
+    public static final String TOP_RATED_MOVIE_BASE_URL = "https://api.themoviedb.org/3/movie/top_rated?api_key=" + API_KEY;
+
+    public static final String POPULAR_MOVIE_BASE_URL = "https://api.themoviedb.org/3/movie/popular?api_key=" + API_KEY;
+
+    public static final String MOVIE_TRAILER_URL = "https://www.youtube.com/watch?v=";
+
+   public static final Uri BASE_EACH_MOVIE_ID = Uri.parse("https://api.themoviedb.org/3/movie");
+
+   public static final String PATH_APPENDED = "videos?api_key=" + API_KEY;
+           //"https://api.themoviedb.org/3/movie/" + 284054 + "/videos?api_key=" + API_KEY;
+
 
     private static final String LANGUAGE_PARAM = "language";
 
@@ -44,6 +57,33 @@ public final class NetworkUtils {
             e.printStackTrace();
         }
         return url;
+    }
+
+    // Construct URL for each movie id
+
+    public static URL buildYoutubeUrl(String movieId){
+
+         Uri buildUri = BASE_EACH_MOVIE_ID.buildUpon().
+                 appendPath(movieId + PATH_APPENDED ).
+                 appendQueryParameter(LANGUAGE_PARAM , LANGUAGE_FORMAT).
+                 build();
+        URL url = null ;
+
+        try {
+            url = new URL(buildUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return url;
+
+    }
+
+    public static Uri constructYoutubeUrl(String key){
+
+        Uri builtUrl = Uri.parse( MOVIE_TRAILER_URL + key );
+
+
+        return builtUrl;
     }
 
     public static String makeHttpUrlConnection(URL url) throws IOException {

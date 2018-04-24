@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.yassermuhamed.moviesapp.utilities.NetworkUtils;
 import com.example.yassermuhamed.moviesapp.utilities.OpenMovieJsonUtils;
@@ -47,9 +48,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         mRecyclerView.setAdapter(mMovieAdapter);
 
         loadPublicMoviesData();
-
-        //loadTopRatedMoviesData();
-
     }
 
     private void loadTopRatedMoviesData(){
@@ -65,14 +63,14 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     }
 
     @Override
-    public void onListClickItem(String position) {
-
-        //MovieData movieData = mMovieAdapter.mArrayListOfThumbnails.get(Integer.parseInt(position));
+    public void onListClickItem(MovieData position) {
 
         Intent intent = new Intent(MainActivity.this , MovieDetailsActivity.class);
-        
+
+        intent.putExtra(Intent.EXTRA_TEXT , position);
 
         startActivity(intent);
+
     }
 
     class FetchMovieAsyncTask extends AsyncTask<String, Void, ArrayList<MovieData> > {
@@ -110,8 +108,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             if ( movieDataArrayList != null){
                 mMovieAdapter.setImageThumbnail(movieDataArrayList);
             }else {
-                Log.v(TAG , "NULL POINTER EXCEPTION");
-                //Toast.makeText(MainActivity.this, " NULL POINTER EXCEPTION ", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, " NULL POINTER EXCEPTION ", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -130,6 +127,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             case R.id.movie_public : loadPublicMoviesData(); return true;
 
             case R.id.movie_top_rated : loadTopRatedMoviesData(); return true;
+
+            case R.id.movie_favorites : return true;
         }
         return super.onOptionsItemSelected(item);
     }

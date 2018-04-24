@@ -32,7 +32,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     }
 
     public interface MovieAdapterOnClickHandler{
-        void onListClickItem(String position);
+        void onListClickItem(MovieData position);
     }
     @Override
     public MovieAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -86,7 +86,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         @Override
         public void onClick(View v) {
             int viewHolderPosition = getAdapterPosition();
-            mMovieListItemClicked.onListClickItem( NetworkUtils.IMAGE_MOVIE_BASE_URL + mArrayListOfThumbnails.get(viewHolderPosition).getPosterPath());
+            mMovieListItemClicked.onListClickItem( mArrayListOfThumbnails.get(viewHolderPosition) );
         }
     }
 }

@@ -4,4 +4,8 @@
     <string name="movie_public">Public</string>
 
     <string name="movie_top_rated">Top Rated</string>
+
+    <string name="movie_favorites">Favorites</string>
+
+    <string name="content_authority">com.example.android.moviesapp</string>
 </resources>

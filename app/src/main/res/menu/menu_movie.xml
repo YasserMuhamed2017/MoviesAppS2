@@ -2,14 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/movie_public"
-        android:orderInCategory="1"
-        android:title="@string/movie_public"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/movie_top_rated"
-        android:orderInCategory="2"
-        android:title="@string/movie_top_rated"
-        app:showAsAction="never"/>
+        <item
+            android:id="@+id/movie_public"
+            android:orderInCategory="1"
+            android:title="@string/movie_public"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/movie_top_rated"
+            android:orderInCategory="2"
+            android:title="@string/movie_top_rated"
+            app:showAsAction="never"/>
+        <item
+            android:id="@+id/movie_favorites"
+            android:title="@string/movie_favorites"
+            android:orderInCategory="3"
+            app:showAsAction="never"
+                />
+
 </menu>

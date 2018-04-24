@@ -15,9 +15,9 @@ import java.util.ArrayList;
 public final class OpenMovieJsonUtils {
 
 
-   static ArrayList<MovieData> mMovieDataArrayList = new ArrayList<>();
-
  public static ArrayList<MovieData> extractJSONMovieData(String movieJSONString ) throws JSONException {
+
+     ArrayList<MovieData> mMovieDataArrayList = new ArrayList<>();
 
      JSONObject root = new JSONObject(movieJSONString);
 
@@ -37,11 +37,32 @@ public final class OpenMovieJsonUtils {
 
          String releaseDate = jsonObject.optString("release_date");
 
-         MovieData mMovieData = new MovieData(id , posterPath , overview , voteAverage , releaseDate);
+         String originalTitle = jsonObject.optString("original_title");
+
+         MovieData mMovieData = new MovieData(id , posterPath , overview , voteAverage , releaseDate , originalTitle);
 
          mMovieDataArrayList.add(mMovieData);
      }
      return mMovieDataArrayList;
  }
 
+
+    public static ArrayList<String> extractJSONMovieKeys(String dataResponseByHttp) throws JSONException {
+
+        ArrayList<String> arrayListOfKeys = new ArrayList<>();
+
+        JSONObject root = new JSONObject(dataResponseByHttp);
+
+        JSONArray resultsArray = root.optJSONArray("results");
+
+        for ( int i = 0 ; i < resultsArray.length() ; i++){
+
+            JSONObject jsonObject = resultsArray.optJSONObject(i);
+
+            String key = jsonObject.optString("key");
+
+            arrayListOfKeys.add(key);
+        }
+        return arrayListOfKeys;
+    }
 }
