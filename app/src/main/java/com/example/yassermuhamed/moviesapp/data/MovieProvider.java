@@ -74,7 +74,28 @@ public class MovieProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        return null;
+
+        final SQLiteDatabase db = mMoviesDbHelper.getWritableDatabase();
+
+        final int match = sUriMatcher.match(uri);
+        Uri returnUri;
+        switch (match) {
+            case MOVIES: {
+                long id = db.insert(MovieContract.MovieEntry.COLUMN_TABLE_NAME, null, values);
+                if (id > 0) {
+                    returnUri = MovieContract.MovieEntry.buildMovieUri(id);
+                } else {
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                }
+                break;
+            }
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        if (getContext() != null) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return returnUri;
     }
 
     @Override
@@ -85,22 +106,38 @@ public class MovieProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
 
-        SQLiteDatabase sqLiteDatabase = mMoviesDbHelper.getWritableDatabase();
+//        SQLiteDatabase sqLiteDatabase = mMoviesDbHelper.getWritableDatabase();
+//
+//        int match = sUriMatcher.match(uri);
+//        int count;
+//        switch (match){
+//        case MOVIES_ID:
+//            String id = uri.getPathSegments().get(1);
+//            count = sqLiteDatabase.update(MovieContract.MovieEntry.COLUMN_TABLE_NAME, values,
+//                MovieContract.MovieEntry.COLUMN_ID + " = " + id , null);
+//        break;
+//        default:
+//        throw new IllegalArgumentException("Unknown URI " + uri );
+//
+//    }
+//        getContext().getContentResolver().notifyChange(uri, null);
+//
+//        return count;
+        final SQLiteDatabase db = mMoviesDbHelper.getWritableDatabase();
+        final int match = sUriMatcher.match(uri);
+        int rowsUpdated;
 
-        int match = sUriMatcher.match(uri);
-        int count;
-        switch (match){
-        case MOVIES_ID:
-            String id = uri.getPathSegments().get(1);
-        count = sqLiteDatabase.update(MovieContract.MovieEntry.COLUMN_TABLE_NAME, values,
-                MovieContract.MovieEntry.COLUMN_ID + " = " + id , selectionArgs);
-        break;
-        default:
-        throw new IllegalArgumentException("Unknown URI " + uri );
-
-    }
-        getContext().getContentResolver().notifyChange(uri, null);
-
-        return count;
+        switch (match) {
+            case MOVIES:
+                rowsUpdated = db.update(MovieContract.MovieEntry.COLUMN_TABLE_NAME, values, selection,
+                        selectionArgs);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        if (rowsUpdated != 0 && getContext() != null) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsUpdated;
     }
 }

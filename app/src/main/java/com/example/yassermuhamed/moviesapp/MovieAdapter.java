@@ -1,22 +1,19 @@
 package com.example.yassermuhamed.moviesapp;
 
 import android.app.Activity;
-import android.content.Context;
-import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-
-import com.example.yassermuhamed.moviesapp.utilities.NetworkUtils;
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-
-/**
- * Created by Yasser Muhamed on 06/03/2018.
- */
+    import android.content.Context;
+    import android.database.Cursor;
+    import android.graphics.Movie;
+    import android.net.Uri;
+    import android.support.v7.widget.RecyclerView;
+    import android.view.LayoutInflater;
+    import android.view.View;
+    import android.view.ViewGroup;
+    import android.widget.ImageView;
+    import com.example.yassermuhamed.moviesapp.data.MovieContract;
+    import com.example.yassermuhamed.moviesapp.utilities.NetworkUtils;
+    import com.squareup.picasso.Picasso;
+    import java.util.ArrayList;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder>{
 
@@ -25,6 +22,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     final private MovieAdapterOnClickHandler mMovieListItemClicked ;
 
     Context mContext ;
+    private Cursor mCursor ;
 
     public MovieAdapter(Context context , MovieAdapterOnClickHandler movieAdapterOnClickHandler){
         mContext = context ;
@@ -50,6 +48,22 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public void onBindViewHolder(MovieAdapterViewHolder holder, int position) {
+//
+//        int idIndexed = mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_ID);
+//
+//        int posterPathIndex = mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_PATH);
+//
+//        mCursor.moveToPosition(position);
+//
+//        int id = mCursor.getInt(idIndexed);
+//
+//        String posterPath = mCursor.getString(posterPathIndex);
+//
+//        holder.itemView.setTag(id);
+
+       // MovieData movieData =  mArrayListOfThumbnails.get(position);
+
+        //Picasso.with(mContext).load(NetworkUtils.IMAGE_MOVIE_BASE_URL + movieData.getPosterPath()).into(holder.mPosterImageView);
 
         Picasso.with(mContext).load(NetworkUtils.IMAGE_MOVIE_BASE_URL + mArrayListOfThumbnails.get(position).getPosterPath()).into(holder.mPosterImageView);
 
@@ -57,21 +71,34 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public int getItemCount() {
-        if (mArrayListOfThumbnails == null)
+        if (mContext == null)
             return 0 ;
         return mArrayListOfThumbnails.size();
     }
 
     public void setImageThumbnail( ArrayList<MovieData> movieDataExtracted){
 
-//        String poster_path = movieDataExtracted.getPosterPath();
-//
-//        String thumbnail = NetworkUtils.IMAGE_MOVIE_BASE_URL  + poster_path ;
-
         mArrayListOfThumbnails = movieDataExtracted ;
 
        notifyDataSetChanged();
     }
+
+
+    public Cursor swapCursor(Cursor c) {
+        // check if this cursor is the same as the previous cursor (mCursor)
+        if (mCursor == c) {
+            return null;
+        }
+        Cursor temp = mCursor;
+        this.mCursor = c;
+
+        //check if this is a valid cursor, then update the cursor
+        if (c != null) {
+            this.notifyDataSetChanged();
+        }
+        return temp;
+    }
+
 
     class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
@@ -89,4 +116,5 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
             mMovieListItemClicked.onListClickItem( mArrayListOfThumbnails.get(viewHolderPosition) );
         }
     }
+
 }

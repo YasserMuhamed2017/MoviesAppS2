@@ -12,7 +12,7 @@ public final class MovieContract {
 
     public static final String CONTENT_AUTHORITY = "com.example.android.moviesapp" ;
 
-    public static final Uri BASE_CONTENT_URI = Uri.parse("Content://" + CONTENT_AUTHORITY);
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     public static final String PATH_MOVIES = "moviesapp";
 
@@ -28,5 +28,8 @@ public final class MovieContract {
         public static final String COLUMN_POSTER_PATH = "poster_path";
 
 
+        public static Uri buildMovieUri(long id) {
+           return BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIES).appendPath(String.valueOf(id)).build();
+        }
     }
 }

@@ -1,50 +1,45 @@
 package com.example.yassermuhamed.moviesapp;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
+
 import java.util.ArrayList;
 
-/**
- * Created by Yasser Muhamed on 23/04/2018.
- */
+public class MovieIdAdapter extends RecyclerView.Adapter<MovieIdAdapter.MovieIdAdapterViewHolder>{
 
-public class MovieIdAdapter extends ArrayAdapter<MovieIdItem> {
+
+    Context mContext;
 
     private ArrayList<String> mKeysExtracted;
 
-    public MovieIdAdapter(@NonNull Context context, ArrayList<MovieIdItem> movie) {
+    final private MovieAdapter.MovieAdapterOnClickHandler mMovieListItemClicked ;
 
-
-        super(context,0, movie);
+    public MovieIdAdapter(Context context , MovieAdapter.MovieAdapterOnClickHandler movieAdapterOnClickHandler){
+        mContext = context ;
+        mMovieListItemClicked = movieAdapterOnClickHandler;
     }
 
-    @NonNull
+    public interface MovieIdAdapterOnClickHandler{
+        void onListClickItem(MovieData position);
+    }
+
+
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View movieIdListItem = convertView;
-        if(movieIdListItem == null) {
-            movieIdListItem = LayoutInflater.from(getContext()).inflate(
-                    R.layout.movie_id_list_item, parent, false);
-        }
-        MovieIdItem trailers = getItem(position);
+    public MovieIdAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return null;
+    }
 
-        TextView trailerTextView = movieIdListItem.findViewById(R.id.trailer);
+    @Override
+    public void onBindViewHolder(MovieIdAdapterViewHolder holder, int position) {
 
-        trailerTextView.setText(trailers.getTrailer());
+    }
 
-        ImageView trailersImageView = movieIdListItem.findViewById(R.id.play_movie_arrow);
-
-        trailersImageView.setImageResource(trailers.getImageDrawableId());
-
-        return movieIdListItem;
+    @Override
+    public int getItemCount() {
+        return 0;
     }
 
     public void setKeysExtracted(ArrayList<String> keysExtracted) {
@@ -54,5 +49,23 @@ public class MovieIdAdapter extends ArrayAdapter<MovieIdItem> {
     }
     public ArrayList<String> getKeysExtracted(){
         return mKeysExtracted;
+    }
+
+
+    class MovieIdAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+        public final ImageView mPosterImageView ;
+
+        public MovieIdAdapterViewHolder(View itemView) {
+            super(itemView);
+            mPosterImageView = itemView.findViewById(R.id.poster_view);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int viewHolderPosition = getAdapterPosition();
+            //mMovieListItemClicked.onListClickItem(  );
+        }
     }
 }

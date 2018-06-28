@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 public final class OpenMovieJsonUtils {
 
+    private static int mListOfKeys;
 
  public static ArrayList<MovieData> extractJSONMovieData(String movieJSONString ) throws JSONException {
 
@@ -55,6 +56,8 @@ public final class OpenMovieJsonUtils {
 
         JSONArray resultsArray = root.optJSONArray("results");
 
+        mListOfKeys = resultsArray.length();
+
         for ( int i = 0 ; i < resultsArray.length() ; i++){
 
             JSONObject jsonObject = resultsArray.optJSONObject(i);
@@ -64,5 +67,9 @@ public final class OpenMovieJsonUtils {
             arrayListOfKeys.add(key);
         }
         return arrayListOfKeys;
+    }
+
+    public static int getListOfKeys() {
+        return mListOfKeys;
     }
 }

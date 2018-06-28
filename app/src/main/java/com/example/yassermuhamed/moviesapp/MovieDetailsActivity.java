@@ -1,6 +1,8 @@
 package com.example.yassermuhamed.moviesapp;
 
 import android.content.ActivityNotFoundException;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,12 +13,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.yassermuhamed.moviesapp.data.MovieContract;
 import com.example.yassermuhamed.moviesapp.utilities.NetworkUtils;
 import com.example.yassermuhamed.moviesapp.utilities.OpenMovieJsonUtils;
 import com.squareup.picasso.Picasso;
@@ -36,6 +40,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     TextView originalTitleTV ;
     MovieIdAdapter movieIdAdapter;
     ListView listView;
+    Button mFavoriteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +52,13 @@ public class MovieDetailsActivity extends AppCompatActivity {
         releaseDateTV = findViewById(R.id.release_date);
         rankingTV = findViewById(R.id.ranking);
         originalTitleTV = findViewById(R.id.original_title);
+        mFavoriteButton = findViewById(R.id.favorite_movie);
 
         Intent intent = getIntent();
 
         if (intent.hasExtra(Intent.EXTRA_TEXT)) {
 
-            MovieData dataExtracted = intent.getParcelableExtra(Intent.EXTRA_TEXT);
+            final MovieData dataExtracted = intent.getParcelableExtra(Intent.EXTRA_TEXT);
 
             overviewTV.setText(dataExtracted.getOverview());
 
@@ -64,39 +70,63 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
             originalTitleTV.setText(dataExtracted.getOriginalTitle());
 
-            new FetchMovieIdAsyncTask().execute(NetworkUtils.buildYoutubeUrl(dataExtracted.getId()));
+            final String id = dataExtracted.getId();
+
+           // new FetchMovieIdAsyncTask().execute(NetworkUtils.buildVideoIdUrl(id));
+
+            mFavoriteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+//                    Uri currentPetUri = ContentUris.withAppendedId(MovieContract.MovieEntry.CONTENT_URI, Long.parseLong(id));
+//
+//                    ContentValues contentValues = new ContentValues();
+//                    contentValues.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, NetworkUtils.IMAGE_MOVIE_BASE_URL + dataExtracted.getPosterPath());
+//
+//                    getContentResolver().update(currentPetUri, contentValues ,null,null);
+                    ContentValues movieValues = new ContentValues();
+                    movieValues.put(MovieContract.MovieEntry.COLUMN_ID,
+                            dataExtracted.getId());
+                    movieValues.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH , dataExtracted.getPosterPath());
+
+                    getContentResolver().insert(
+                            MovieContract.MovieEntry.CONTENT_URI,
+                            movieValues
+                    );
+                }
+            });
         }
 
-        final ArrayList<MovieIdItem> trailersArrayList = new ArrayList<>();
+        ArrayList<String> trailersArrayList = new ArrayList<>();
 
-        trailersArrayList.add(new MovieIdItem("trailer1" , R.drawable.ic_play_arrow_black_24dp));
-        trailersArrayList.add(new MovieIdItem("trailer2" , R.drawable.ic_play_arrow_black_24dp));
-        trailersArrayList.add(new MovieIdItem("trailer3" , R.drawable.ic_play_arrow_black_24dp));
-        trailersArrayList.add(new MovieIdItem("trailer4" , R.drawable.ic_play_arrow_black_24dp));
-        trailersArrayList.add(new MovieIdItem("trailer5" , R.drawable.ic_play_arrow_black_24dp));
-        trailersArrayList.add(new MovieIdItem("trailer6" , R.drawable.ic_play_arrow_black_24dp));
+        for (int i = 0 ; i < OpenMovieJsonUtils.getListOfKeys() ; i++){
 
-         movieIdAdapter = new MovieIdAdapter(this , trailersArrayList);
+            trailersArrayList.add("trailer"+(i+1));
 
-         listView = findViewById(R.id.listView);
+        }
 
-        listView.setAdapter(movieIdAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-               String key =  movieIdAdapter.getKeysExtracted().get(position);
-
-                Intent intent = new Intent(Intent.ACTION_VIEW, NetworkUtils.constructYoutubeUrl(key));
-
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(intent);
-                }
-            }
-        });
+//         movieIdAdapter = new MovieIdAdapter(this , trailersArrayList);
+//
+//         listView = findViewById(R.id.listView);
+//
+//         listView.setAdapter(movieIdAdapter);
+//
+//         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//                String key =  movieIdAdapter.getKeysExtracted().get(position);
+//
+//                Intent intent = new Intent(Intent.ACTION_VIEW, NetworkUtils.constructYoutubeUrl(key));
+//
+//                if (intent.resolveActivity(getPackageManager()) != null) {
+//                    startActivity(intent);
+//                }
+//            }
+//        });
 
     }
+
 
     class FetchMovieIdAsyncTask extends AsyncTask<URL, Void, ArrayList<String> > {
 
@@ -132,6 +162,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             if ( movieKeysArrayList != null){
 
                 // here we want to set keys that I get from each movie id https://www.youtube.com/watch?v=<<key>>
+
                 movieIdAdapter.setKeysExtracted(movieKeysArrayList);
             }else {
                 Toast.makeText(MovieDetailsActivity.this, " NULL POINTER EXCEPTION ", Toast.LENGTH_LONG).show();
@@ -139,18 +170,5 @@ public class MovieDetailsActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_movie , menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }

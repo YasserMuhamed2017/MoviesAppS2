@@ -22,7 +22,7 @@
             android:parentActivityName=".MainActivity"
             android:name=".MovieDetailsActivity"/>
         <provider
-            android:authorities="@string/content_authority"
+            android:authorities="com.example.android.moviesapp"
             android:name=".data.MovieProvider"
             android:exported="false"
             />

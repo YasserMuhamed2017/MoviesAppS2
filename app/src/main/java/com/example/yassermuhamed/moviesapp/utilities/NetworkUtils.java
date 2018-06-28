@@ -59,18 +59,24 @@ public final class NetworkUtils {
         return url;
     }
 
-    // Construct URL for each movie id
+    // Construct URL for each movie id https://api.themoviedb.org/3/movie/269149/videos?api_key=api_key&language=en-US
 
-    public static URL buildYoutubeUrl(String movieId){
+    public static URL buildVideoIdUrl(String movieId){
 
-         Uri buildUri = BASE_EACH_MOVIE_ID.buildUpon().
-                 appendPath(movieId + PATH_APPENDED ).
-                 appendQueryParameter(LANGUAGE_PARAM , LANGUAGE_FORMAT).
-                 build();
+    //         Uri buildUri = BASE_EACH_MOVIE_ID.buildUpon().
+    //                 appendPath(movieId).
+    //                 appendPath( PATH_APPENDED ).
+    //                 appendQueryParameter(LANGUAGE_PARAM , LANGUAGE_FORMAT).
+    //                 build();
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority("api.themoviedb.org")
+                .appendPath("3").appendPath("movie").appendPath(movieId).appendPath("videos").appendQueryParameter("api_key" , API_KEY).appendQueryParameter(LANGUAGE_PARAM ,LANGUAGE_FORMAT );
+
         URL url = null ;
 
         try {
-            url = new URL(buildUri.toString());
+            url = new URL(builder.build().toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -80,10 +86,9 @@ public final class NetworkUtils {
 
     public static Uri constructYoutubeUrl(String key){
 
-        Uri builtUrl = Uri.parse( MOVIE_TRAILER_URL + key );
+        Uri builtUr = Uri.parse( MOVIE_TRAILER_URL + key );
 
-
-        return builtUrl;
+        return builtUr;
     }
 
     public static String makeHttpUrlConnection(URL url) throws IOException {

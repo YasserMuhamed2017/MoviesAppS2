@@ -13,8 +13,8 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_ENTRIES = "CREATE TABLE " +
             MovieContract.MovieEntry.COLUMN_TABLE_NAME + " (" +
-            MovieContract.MovieEntry.COLUMN_ID + "INTEGER PRIMARY KEY AUTOINCREMENT," +
-            MovieContract.MovieEntry.COLUMN_POSTER_PATH + "TEXT NOT NULL)";
+            MovieContract.MovieEntry.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            MovieContract.MovieEntry.COLUMN_POSTER_PATH + " TEXT NOT NULL)";
 
 
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + MovieContract.MovieEntry.COLUMN_TABLE_NAME ;
