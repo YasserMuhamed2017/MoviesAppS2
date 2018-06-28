@@ -1,10 +1,12 @@
 package com.example.yassermuhamed.moviesapp.data;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -83,9 +85,9 @@ public class MovieProvider extends ContentProvider {
             case MOVIES: {
                 long id = db.insert(MovieContract.MovieEntry.COLUMN_TABLE_NAME, null, values);
                 if (id > 0) {
-                    returnUri = MovieContract.MovieEntry.buildMovieUri(id);
+                    returnUri = ContentUris.withAppendedId(MovieContract.MovieEntry.CONTENT_URI, id);
                 } else {
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                    throw new SQLiteException("Failed to insert row into " + uri);
                 }
                 break;
             }

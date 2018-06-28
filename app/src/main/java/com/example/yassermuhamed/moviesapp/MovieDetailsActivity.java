@@ -1,5 +1,6 @@
 package com.example.yassermuhamed.moviesapp;
 
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -9,6 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -75,6 +77,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
            // new FetchMovieIdAsyncTask().execute(NetworkUtils.buildVideoIdUrl(id));
 
             mFavoriteButton.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("StaticFieldLeak")
                 @Override
                 public void onClick(View v) {
 
@@ -84,15 +87,28 @@ public class MovieDetailsActivity extends AppCompatActivity {
 //                    contentValues.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, NetworkUtils.IMAGE_MOVIE_BASE_URL + dataExtracted.getPosterPath());
 //
 //                    getContentResolver().update(currentPetUri, contentValues ,null,null);
-                    ContentValues movieValues = new ContentValues();
-                    movieValues.put(MovieContract.MovieEntry.COLUMN_ID,
-                            dataExtracted.getId());
-                    movieValues.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH , dataExtracted.getPosterPath());
+                    new AsyncTask<Void,Void,Void>(){
 
-                    getContentResolver().insert(
-                            MovieContract.MovieEntry.CONTENT_URI,
-                            movieValues
-                    );
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+
+                            ContentValues movieValues = new ContentValues();
+                            movieValues.put(MovieContract.MovieEntry.COLUMN_ID,
+                                    dataExtracted.getId());
+                            movieValues.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH , dataExtracted.getPosterPath());
+
+                            getContentResolver().insert(
+                                    MovieContract.MovieEntry.CONTENT_URI,
+                                    movieValues
+                            );
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+                        }
+                    };
                 }
             });
         }
@@ -169,6 +185,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         }
     }
+
 
 
 }
