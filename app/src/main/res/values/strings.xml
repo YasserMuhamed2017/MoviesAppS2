@@ -8,4 +8,6 @@
     <string name="movie_favorites">Favorites</string>
 
     <string name="content_authority">com.example.android.moviesapp</string>
+
+    <string name="preference_file_key">file data</string>
 </resources>

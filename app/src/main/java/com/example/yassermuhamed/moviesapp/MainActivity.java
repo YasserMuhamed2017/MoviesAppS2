@@ -3,7 +3,9 @@ package com.example.yassermuhamed.moviesapp;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Parcelable;
 import android.support.v4.app.LoaderManager;
@@ -22,6 +24,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 import com.example.yassermuhamed.moviesapp.data.MovieContract;
+import com.example.yassermuhamed.moviesapp.data.MoviesDbHelper;
 import com.example.yassermuhamed.moviesapp.utilities.NetworkUtils;
 import com.example.yassermuhamed.moviesapp.utilities.OpenMovieJsonUtils;
 import com.squareup.picasso.Picasso;
@@ -31,13 +34,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler,LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     RecyclerView mRecyclerView;
 
     MovieAdapter mMovieAdapter;
+
+    private SQLiteDatabase sqLiteDatabase;
 
     GridLayoutManager gridLayoutManager ;
 
@@ -66,13 +71,17 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
         mPosterPathImageView = findViewById(R.id.poster_view);
 
+        MoviesDbHelper moviesDbHelper = new MoviesDbHelper(this);
+
+        sqLiteDatabase = moviesDbHelper.getWritableDatabase();
+
         gridLayoutManager = new GridLayoutManager(this, 2);
 
         mRecyclerView.setHasFixedSize(true);
 
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
-        mMovieAdapter = new MovieAdapter(this , this);
+        mMovieAdapter = new MovieAdapter(this , this , getAllGuests());
 
         mRecyclerView.setAdapter(mMovieAdapter);
 
@@ -94,6 +103,18 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 //        }
 //
 //    }
+
+    private Cursor getAllGuests() {
+        return sqLiteDatabase.query(
+               MovieContract.MovieEntry.COLUMN_TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+    }
 
     public static int calculateNoOfColumns(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
@@ -128,27 +149,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(this, MovieContract.MovieEntry.CONTENT_URI , MAIN_MOVIE_PROJECTION ,null,null,null);
-    }
 
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            int posterPathIndex =
-                data.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_PATH);
-
-        String posterPath = data.getString(posterPathIndex);
-        Picasso.with(this).load(NetworkUtils.IMAGE_MOVIE_BASE_URL + posterPath).into(mPosterPathImageView);
-
-        mMovieAdapter.swapCursor(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
-        mMovieAdapter.swapCursor(null);
-    }
 
 
     class FetchMovieAsyncTask extends AsyncTask<String, Void, ArrayList<MovieData> > {
@@ -191,6 +192,21 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         }
     }
 
+    private void retrieveData() {
+
+        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        String restoredText = prefs.getString("text", null);
+        if (restoredText != null) {
+            //mSaved.setText(restoredText, TextView.BufferType.EDITABLE);
+            // int selectionStart = prefs.getInt("selection-start", -1);
+            // int selectionEnd = prefs.getInt("selection-end", -1);
+            // /if (selectionStart != -1 && selectionEnd != -1) {
+            // mSaved.setSelection(selectionStart, selectionEnd);
+            // }/
+            // }
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
          getMenuInflater().inflate(R.menu.menu_movie , menu);
@@ -206,7 +222,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
             case R.id.movie_top_rated : loadTopRatedMoviesData(); return true;
 
-            case R.id.movie_favorites : getSupportLoaderManager().initLoader(MOVIE_LOADER_ID ,null,this); return true;
+            case R.id.movie_favorites :  return true;
+
+
         }
         return super.onOptionsItemSelected(item);
     }

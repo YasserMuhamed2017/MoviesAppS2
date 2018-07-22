@@ -6,6 +6,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -43,6 +44,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     MovieIdAdapter movieIdAdapter;
     ListView listView;
     Button mFavoriteButton;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,35 +83,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-//                    Uri currentPetUri = ContentUris.withAppendedId(MovieContract.MovieEntry.CONTENT_URI, Long.parseLong(id));
-//
-//                    ContentValues contentValues = new ContentValues();
-//                    contentValues.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, NetworkUtils.IMAGE_MOVIE_BASE_URL + dataExtracted.getPosterPath());
-//
-//                    getContentResolver().update(currentPetUri, contentValues ,null,null);
-                    new AsyncTask<Void,Void,Void>(){
+                    ContentValues contentValues = new ContentValues();
 
-                        @Override
-                        protected Void doInBackground(Void... voids) {
+                    contentValues.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, NetworkUtils.IMAGE_MOVIE_BASE_URL + dataExtracted.getPosterPath());
 
-                            ContentValues movieValues = new ContentValues();
-                            movieValues.put(MovieContract.MovieEntry.COLUMN_ID,
-                                    dataExtracted.getId());
-                            movieValues.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH , dataExtracted.getPosterPath());
+                    getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, contentValues);
 
-                            getContentResolver().insert(
-                                    MovieContract.MovieEntry.CONTENT_URI,
-                                    movieValues
-                            );
-                            return null;
                         }
 
-                        @Override
-                        protected void onPostExecute(Void aVoid) {
-                            super.onPostExecute(aVoid);
-                        }
-                    };
-                }
             });
         }
 
