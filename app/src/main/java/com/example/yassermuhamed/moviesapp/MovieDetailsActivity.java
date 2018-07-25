@@ -112,9 +112,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-              //String key = movieIdAdapter.getItem(position);
+                String key = movieIdAdapter.getItem(position);
 
-                String key = OpenMovieJsonUtils.getKeysExtracted().get(position);
+                //String key = OpenMovieJsonUtils.getKeysExtracted().get(position);
 
                 Intent intent = new Intent(Intent.ACTION_VIEW, NetworkUtils.constructYoutubeUrl(key));
 
