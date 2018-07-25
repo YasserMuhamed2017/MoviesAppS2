@@ -16,6 +16,8 @@ public final class OpenMovieJsonUtils {
 
     private static int mListOfKeys;
 
+    private static ArrayList<String> mKeysExtracted ;
+
  public static ArrayList<MovieData> extractJSONMovieData(String movieJSONString ) throws JSONException {
 
      ArrayList<MovieData> mMovieDataArrayList = new ArrayList<>();
@@ -48,7 +50,7 @@ public final class OpenMovieJsonUtils {
  }
 
 
-    public static ArrayList<String> extractJSONMovieKeys(String dataResponseByHttp) throws JSONException {
+    public static ArrayList<String> extractMovieKeys(String dataResponseByHttp) throws JSONException {
 
         ArrayList<String> arrayListOfKeys = new ArrayList<>();
 
@@ -71,5 +73,14 @@ public final class OpenMovieJsonUtils {
 
     public static int getListOfKeys() {
         return mListOfKeys;
+    }
+    public static void setKeysExtracted(ArrayList<String> keysExtracted) {
+
+        mKeysExtracted = keysExtracted;
+
+    }
+
+    public static ArrayList<String> getKeysExtracted(){
+        return mKeysExtracted;
     }
 }

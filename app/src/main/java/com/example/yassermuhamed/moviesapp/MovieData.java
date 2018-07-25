@@ -11,6 +11,7 @@ public class MovieData implements Parcelable{
     private String mVoteAverage ;
     private String mReleaseDate ;
     private String mOriginalTitle ;
+    private String mMovieTrailer ;
 
     public MovieData(String id , String posterPath , String overview , String voteAverage , String releaseDate , String originalTitle ){
         mId = id ;
@@ -64,6 +65,10 @@ public class MovieData implements Parcelable{
 
     public String getOriginalTitle(){
         return mOriginalTitle ;
+    }
+
+    public String getMovieTrailer() {
+        return mMovieTrailer;
     }
 
     @Override

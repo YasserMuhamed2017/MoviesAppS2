@@ -42,7 +42,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     TextView rankingTV;
     TextView originalTitleTV ;
     MovieIdAdapter movieIdAdapter;
-    ListView listView;
+   // ListView listView;
     Button mFavoriteButton;
     SharedPreferences sharedPreferences;
 
@@ -76,7 +76,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
             final String id = dataExtracted.getId();
 
-           // new FetchMovieIdAsyncTask().execute(NetworkUtils.buildVideoIdUrl(id));
+            new FetchMovieIdAsyncTask().execute(NetworkUtils.buildVideoIdUrl(id));
 
             mFavoriteButton.setOnClickListener(new View.OnClickListener() {
                 @SuppressLint("StaticFieldLeak")
@@ -102,25 +102,27 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         }
 
-//         movieIdAdapter = new MovieIdAdapter(this , trailersArrayList);
-//
-//         listView = findViewById(R.id.listView);
-//
-//         listView.setAdapter(movieIdAdapter);
-//
-//         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                String key =  movieIdAdapter.getKeysExtracted().get(position);
-//
-//                Intent intent = new Intent(Intent.ACTION_VIEW, NetworkUtils.constructYoutubeUrl(key));
-//
-//                if (intent.resolveActivity(getPackageManager()) != null) {
-//                    startActivity(intent);
-//                }
-//            }
-//        });
+        ListView listViewMoviesTrailer = findViewById(R.id.listView);
+
+        movieIdAdapter = new MovieIdAdapter(this , trailersArrayList );
+
+        listViewMoviesTrailer.setAdapter(movieIdAdapter);
+
+        listViewMoviesTrailer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+              //String key = movieIdAdapter.getItem(position);
+
+                String key = OpenMovieJsonUtils.getKeysExtracted().get(position);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, NetworkUtils.constructYoutubeUrl(key));
+
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+            }
+        });
 
     }
 
@@ -142,7 +144,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
                 String dataResponseByHttp = NetworkUtils.makeHttpUrlConnection(urlForEachMovieId);
 
-                return OpenMovieJsonUtils.extractJSONMovieKeys(dataResponseByHttp);
+                return OpenMovieJsonUtils.extractMovieKeys(dataResponseByHttp);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -151,7 +153,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 e.printStackTrace();
                 return null;
             }
-
         }
 
         @Override
@@ -160,7 +161,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
                 // here we want to set keys that I get from each movie id https://www.youtube.com/watch?v=<<key>>
 
-                movieIdAdapter.setKeysExtracted(movieKeysArrayList);
+                OpenMovieJsonUtils.setKeysExtracted(movieKeysArrayList);
+
             }else {
                 Toast.makeText(MovieDetailsActivity.this, " NULL POINTER EXCEPTION ", Toast.LENGTH_LONG).show();
             }

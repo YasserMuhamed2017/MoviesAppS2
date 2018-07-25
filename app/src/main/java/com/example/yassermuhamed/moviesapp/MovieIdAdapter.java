@@ -1,71 +1,48 @@
 package com.example.yassermuhamed.moviesapp;
 
 import android.content.Context;
+import android.graphics.Movie;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class MovieIdAdapter extends RecyclerView.Adapter<MovieIdAdapter.MovieIdAdapterViewHolder>{
+public  class MovieIdAdapter extends ArrayAdapter<String>{
 
 
-    Context mContext;
-
-    private ArrayList<String> mKeysExtracted;
-
-    final private MovieAdapter.MovieAdapterOnClickHandler mMovieListItemClicked ;
-
-    public MovieIdAdapter(Context context , MovieAdapter.MovieAdapterOnClickHandler movieAdapterOnClickHandler){
-        mContext = context ;
-        mMovieListItemClicked = movieAdapterOnClickHandler;
+    public MovieIdAdapter(Context context, List<String> keys) {
+        super(context, 0, keys);
     }
 
-    public interface MovieIdAdapterOnClickHandler{
-        void onListClickItem(MovieData position);
-    }
-
-
+    @NonNull
     @Override
-    public MovieIdAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
-    }
-
-    @Override
-    public void onBindViewHolder(MovieIdAdapterViewHolder holder, int position) {
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return 0;
-    }
-
-    public void setKeysExtracted(ArrayList<String> keysExtracted) {
-
-        mKeysExtracted = keysExtracted;
-
-    }
-    public ArrayList<String> getKeysExtracted(){
-        return mKeysExtracted;
-    }
-
-
-    class MovieIdAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-
-        public final ImageView mPosterImageView ;
-
-        public MovieIdAdapterViewHolder(View itemView) {
-            super(itemView);
-            mPosterImageView = itemView.findViewById(R.id.poster_view);
-            itemView.setOnClickListener(this);
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        View listItemView = convertView;
+        if (listItemView == null) {
+            listItemView = LayoutInflater.from(getContext()).inflate(
+                    R.layout.movie_id_list_item, parent, false);
         }
 
-        @Override
-        public void onClick(View v) {
-            int viewHolderPosition = getAdapterPosition();
-            //mMovieListItemClicked.onListClickItem(  );
-        }
+        String movie = getItem(position);
+
+        TextView trailerMovie = listItemView.findViewById(R.id.trailers_movies);
+
+        trailerMovie.setText(movie);
+
+        ImageView imageViewTrailer = listItemView.findViewById(R.id.play_movie_arrow);
+
+        imageViewTrailer.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+
+        return listItemView;
+
     }
+
 }
