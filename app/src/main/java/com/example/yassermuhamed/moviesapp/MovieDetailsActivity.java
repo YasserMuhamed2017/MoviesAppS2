@@ -1,38 +1,35 @@
 package com.example.yassermuhamed.moviesapp;
 
-import android.annotation.SuppressLint;
-import android.content.ActivityNotFoundException;
-import android.content.ContentUris;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.yassermuhamed.moviesapp.data.MovieContract;
-import com.example.yassermuhamed.moviesapp.utilities.NetworkUtils;
-import com.example.yassermuhamed.moviesapp.utilities.OpenMovieJsonUtils;
-import com.squareup.picasso.Picasso;
-
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
+    import android.annotation.SuppressLint;
+    import android.content.ActivityNotFoundException;
+    import android.content.ContentUris;
+    import android.content.ContentValues;
+    import android.content.Context;
+    import android.content.Intent;
+    import android.content.SharedPreferences;
+    import android.net.Uri;
+    import android.os.AsyncTask;
+    import android.support.v7.app.AppCompatActivity;
+    import android.os.Bundle;
+    import android.util.Log;
+    import android.view.Menu;
+    import android.view.MenuItem;
+    import android.view.View;
+    import android.widget.AdapterView;
+    import android.widget.Button;
+    import android.widget.ImageView;
+    import android.widget.LinearLayout;
+    import android.widget.ListView;
+    import android.widget.TextView;
+    import android.widget.Toast;
+    import com.example.yassermuhamed.moviesapp.data.MovieContract;
+    import com.example.yassermuhamed.moviesapp.utilities.NetworkUtils;
+    import com.example.yassermuhamed.moviesapp.utilities.OpenMovieJsonUtils;
+    import com.squareup.picasso.Picasso;
+    import org.json.JSONException;
+    import java.io.IOException;
+    import java.net.URL;
+    import java.util.ArrayList;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
@@ -42,7 +39,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
     TextView rankingTV;
     TextView originalTitleTV ;
     MovieIdAdapter movieIdAdapter;
-   // ListView listView;
     Button mFavoriteButton;
     SharedPreferences sharedPreferences;
 
@@ -168,7 +164,4 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         }
     }
-
-
-
 }

@@ -1,7 +1,6 @@
 package com.example.yassermuhamed.moviesapp;
 
-import android.app.Activity;
-    import android.content.Context;
+import android.content.Context;
     import android.database.Cursor;
     import android.graphics.Movie;
     import android.net.Uri;
@@ -22,6 +21,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     final private MovieAdapterOnClickHandler mMovieListItemClicked ;
 
     Context mContext ;
+
     private Cursor mCursor ;
 
     public MovieAdapter(Context context , MovieAdapterOnClickHandler movieAdapterOnClickHandler , Cursor cursor){
@@ -66,7 +66,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
         //Picasso.with(mContext).load(NetworkUtils.IMAGE_MOVIE_BASE_URL + movieData.getPosterPath()).into(holder.mPosterImageView);
 
-        //         Picasso.with(mContext).load(NetworkUtils.IMAGE_MOVIE_BASE_URL + mArrayListOfThumbnails.get(position).getPosterPath()).into(holder.mPosterImageView);
+          Picasso.with(mContext).load(NetworkUtils.IMAGE_MOVIE_BASE_URL + mArrayListOfThumbnails.get(position).getPosterPath()).into(holder.mPosterImageView);
 
         // Move the mCursor to the position of the item to be displayed
         if (!mCursor.moveToPosition(position))

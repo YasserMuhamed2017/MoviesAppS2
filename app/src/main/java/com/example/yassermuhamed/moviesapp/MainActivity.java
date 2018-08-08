@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Parcelable;
 import android.support.v4.app.LoaderManager;
@@ -34,7 +35,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler,LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -88,21 +89,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         loadPublicMoviesData();
     }
 
-//    @Override
-//    public void onSaveInstanceState(Bundle savedInstanceState) {
-//        super.onSaveInstanceState(savedInstanceState);
-//
-//        savedInstanceState.putParcelable(KEY_INSTANCE_STATE_RV_POSITION, gridLayoutManager.onSaveInstanceState());
-//
-//        if (savedInstanceState != null) {
-//            mLayoutManagerSavedState = savedInstanceState.getParcelable(KEY_INSTANCE_STATE_RV_POSITION);
-//        }
-//
-//        if (mLayoutManagerSavedState != null) {
-//            gridLayoutManager.onRestoreInstanceState(mLayoutManagerSavedState);
-//        }
-//
-//    }
+
 
     private Cursor getAllGuests() {
         return sqLiteDatabase.query(
@@ -149,7 +136,26 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     }
 
+    @Override
+    public Loader onCreateLoader(int id, Bundle args) {
 
+        Uri CONTENT_URI = MovieContract.MovieEntry.CONTENT_URI;
+
+        CursorLoader cursorLoader = new CursorLoader(this , CONTENT_URI , null , null,null ,null);
+
+        return cursorLoader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader loader, Cursor cursor) {
+
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader loader) {
+
+    }
 
 
     class FetchMovieAsyncTask extends AsyncTask<String, Void, ArrayList<MovieData> > {
@@ -222,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
             case R.id.movie_top_rated : loadTopRatedMoviesData(); return true;
 
-            case R.id.movie_favorites :  return true;
+            case R.id.movie_favorites : getSupportLoaderManager().initLoader(1, null, this);     return true;
 
 
         }
