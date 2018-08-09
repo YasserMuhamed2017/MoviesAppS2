@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     Parcelable mLayoutManagerSavedState;
 
+    MovieCursorAdapter mCursorAdapter ;
+
     ArrayList<MovieData> cursorList = new ArrayList<>();
 
     int spanCount = 2;
@@ -68,13 +70,27 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mRecyclerView = findViewById(R.id.RecyclerView);
 
-        mPosterPathImageView = findViewById(R.id.poster_view);
+
+
+       mPosterPathImageView = findViewById(R.id.poster_view);
 
         MoviesDbHelper moviesDbHelper = new MoviesDbHelper(this);
 
         sqLiteDatabase = moviesDbHelper.getWritableDatabase();
+
+        displayMoviesData();
+
+        mMovieAdapter = new MovieAdapter(this , this , getAllGuests());
+
+        mRecyclerView.setAdapter(mMovieAdapter);
+
+        loadPublicMoviesData();
+    }
+
+    private void displayMoviesData(){
+
+        mRecyclerView = findViewById(R.id.RecyclerView);
 
         gridLayoutManager = new GridLayoutManager(this, 2);
 
@@ -82,11 +98,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
-        mMovieAdapter = new MovieAdapter(this , this , getAllGuests());
-
-        mRecyclerView.setAdapter(mMovieAdapter);
-
-        loadPublicMoviesData();
     }
 
 
@@ -139,9 +150,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
 
+        String[] projection = {
+                MovieContract.MovieEntry.COLUMN_ID ,
+                MovieContract.MovieEntry.COLUMN_POSTER_PATH};
+
         Uri CONTENT_URI = MovieContract.MovieEntry.CONTENT_URI;
 
-        CursorLoader cursorLoader = new CursorLoader(this , CONTENT_URI , null , null,null ,null);
+        CursorLoader cursorLoader = new CursorLoader(this , CONTENT_URI , projection , null,null ,null);
 
         return cursorLoader;
     }
@@ -149,12 +164,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     @Override
     public void onLoadFinished(Loader loader, Cursor cursor) {
 
-
+        mCursorAdapter.swapCursor(cursor);
     }
 
     @Override
     public void onLoaderReset(Loader loader) {
 
+        mCursorAdapter.swapCursor(null);
     }
 
 
@@ -228,7 +244,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
             case R.id.movie_top_rated : loadTopRatedMoviesData(); return true;
 
-            case R.id.movie_favorites : getSupportLoaderManager().initLoader(1, null, this);     return true;
+            case R.id.movie_favorites :{
+
+
+                getSupportLoaderManager().initLoader(MOVIE_LOADER_ID ,null ,this);
+            displayMoviesData();
+
+            }return true;
 
 
         }
