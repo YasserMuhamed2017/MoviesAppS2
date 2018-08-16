@@ -29,7 +29,6 @@ import com.example.yassermuhamed.moviesapp.data.MoviesDbHelper;
 import com.example.yassermuhamed.moviesapp.utilities.NetworkUtils;
 import com.example.yassermuhamed.moviesapp.utilities.OpenMovieJsonUtils;
 import com.squareup.picasso.Picasso;
-
 import org.json.JSONException;
 import java.io.IOException;
 import java.net.URL;
@@ -70,10 +69,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
-
-       mPosterPathImageView = findViewById(R.id.poster_view);
+        mPosterPathImageView = findViewById(R.id.poster_view);
 
         MoviesDbHelper moviesDbHelper = new MoviesDbHelper(this);
 
@@ -81,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
         displayMoviesData();
 
-        mMovieAdapter = new MovieAdapter(this , this , getAllGuests());
+        mMovieAdapter = new MovieAdapter(this , this );
 
         mRecyclerView.setAdapter(mMovieAdapter);
 
@@ -99,7 +95,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
     }
-
 
 
     private Cursor getAllGuests() {
@@ -163,6 +158,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     @Override
     public void onLoadFinished(Loader loader, Cursor cursor) {
+
+        mCursorAdapter = new MovieCursorAdapter(this , cursor);
 
         mCursorAdapter.swapCursor(cursor);
     }
@@ -247,8 +244,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             case R.id.movie_favorites :{
 
 
+                displayMoviesData();
+
                 getSupportLoaderManager().initLoader(MOVIE_LOADER_ID ,null ,this);
-            displayMoviesData();
+
 
             }return true;
 

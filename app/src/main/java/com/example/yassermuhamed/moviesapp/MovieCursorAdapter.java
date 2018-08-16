@@ -16,11 +16,14 @@ public class MovieCursorAdapter extends CursorAdapter {
 
     Context mContext ;
 
+    Cursor mCursor;
+
     public MovieCursorAdapter(Context context, Cursor c) {
 
         super(context, c );
 
         mContext = context ;
+        mCursor = c ;
     }
 
     @Override
@@ -38,4 +41,20 @@ public class MovieCursorAdapter extends CursorAdapter {
 
         Picasso.with(mContext).load(posterPath).into(IVPosterPath);
     }
+
+    public Cursor swapCursor(Cursor c) {
+        // check if this cursor is the same as the previous cursor (mCursor)
+        if (mCursor == c) {
+            return null;
+        }
+        Cursor temp = mCursor;
+        this.mCursor = c;
+
+        //check if this is a valid cursor, then update the cursor
+        if (c != null) {
+            this.notifyDataSetChanged();
+        }
+        return temp;
+    }
+
 }
