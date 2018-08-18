@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     Parcelable mLayoutManagerSavedState;
 
-    MovieCursorAdapter mCursorAdapter ;
+    MyListCursorAdapter mCursorAdapter ;
 
     ArrayList<MovieData> cursorList = new ArrayList<>();
 
@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     @Override
     public void onLoadFinished(Loader loader, Cursor cursor) {
 
-        mCursorAdapter = new MovieCursorAdapter(this , cursor);
+        mCursorAdapter = new MyListCursorAdapter(this , cursor);
 
         mCursorAdapter.swapCursor(cursor);
     }
@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     }
 
 
-    class FetchMovieAsyncTask extends AsyncTask<String, Void, ArrayList<MovieData> > {
+  public  class FetchMovieAsyncTask extends AsyncTask<String, Void, ArrayList<MovieData> > {
 
         @Override
         protected void onPreExecute() {
@@ -243,11 +243,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
             case R.id.movie_favorites :{
 
-
-                displayMoviesData();
-
                 getSupportLoaderManager().initLoader(MOVIE_LOADER_ID ,null ,this);
 
+                displayMoviesData();
 
             }return true;
 
