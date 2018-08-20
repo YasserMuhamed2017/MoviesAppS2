@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     public void onLoadFinished(Loader loader, Cursor cursor) {
 
         mCursorAdapter = new MyListCursorAdapter(this , cursor);
-        mRecyclerView.setAdapter(mCursorAdapter);
+
         mCursorAdapter.swapCursor(cursor);
     }
 
@@ -247,6 +247,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
                 displayMoviesData();
 
+                mRecyclerView.setAdapter(mCursorAdapter);
 
             }return true;
 
