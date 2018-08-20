@@ -55,7 +55,7 @@ class MyListCursorAdapter extends CursorRecyclerViewAdapter<MyListCursorAdapter.
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mCursor.getCount();
     }
 
     public Cursor swapCursor(Cursor c) {

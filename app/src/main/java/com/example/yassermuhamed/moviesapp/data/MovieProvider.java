@@ -85,7 +85,7 @@ public class MovieProvider extends ContentProvider {
             case MOVIES: {
                 long id = db.insert(MovieContract.MovieEntry.COLUMN_TABLE_NAME, null, values);
                 if (id > 0) {
-                    returnUri = ContentUris.withAppendedId(MovieContract.MovieEntry.CONTENT_URI, id);
+                    returnUri = ContentUris.withAppendedId(uri , id);
                 } else {
                     throw new SQLiteException("Failed to insert row into " + uri);
                 }
