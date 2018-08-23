@@ -47,21 +47,23 @@ public class MovieProvider extends ContentProvider {
         Cursor cursor;
 
         int match = sUriMatcher.match(uri);
+        cursor = sqLiteDatabase.query(MovieContract.MovieEntry.COLUMN_TABLE_NAME,
+                projection ,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder);
 
-        switch (match){
+//        switch (match){
 
-            case MOVIES:
-                cursor = sqLiteDatabase.query(MovieContract.MovieEntry.COLUMN_TABLE_NAME,
-                                            projection ,
-                                            selection,
-                                             selectionArgs,
-                                             null,
-                                             null,
-                                           sortOrder);
-                break;
-            default:
-                throw new IllegalArgumentException("Cannot query unknown URI " + uri);
-        }
+           // case MOVIES:
+
+
+              //  break;
+          //  default:
+               // throw new IllegalArgumentException("Cannot query unknown URI " + uri);
+        //}
         cursor.setNotificationUri(getContext().getContentResolver() , uri);
 
         return cursor;
