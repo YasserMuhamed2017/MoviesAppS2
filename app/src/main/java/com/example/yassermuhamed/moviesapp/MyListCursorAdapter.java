@@ -12,19 +12,24 @@ import android.widget.TextView;
 import com.example.yassermuhamed.moviesapp.data.MovieContract;
 import com.squareup.picasso.Picasso;
 
-class MyListCursorAdapter extends CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHolder>{
+ class MyListCursorAdapter extends CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHolder>{
 
     Context mContext ;
 
     Cursor mCursor;
 
+    MyListCursorAdapter object;
+
     public MyListCursorAdapter(Context context, Cursor cursor) {
+
         super(context, cursor);
 
         mCursor = cursor ;
     }
 
-   public   static class ViewHolder extends RecyclerView.ViewHolder {
+
+     public static class ViewHolder extends RecyclerView.ViewHolder {
+
         public ImageView IVPosterPath;
         public ViewHolder(View view) {
             super(view);

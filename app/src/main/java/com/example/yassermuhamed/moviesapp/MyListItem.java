@@ -4,6 +4,7 @@ import android.database.Cursor;
 
 public class MyListItem{
     private String name;
+    MyListCursorAdapter listCursorAdapter;
 
     public void setName(String name){
         this.name=name;
@@ -17,4 +18,11 @@ public class MyListItem{
         return null;
     }
 
+    public void setAdapterObject(MyListCursorAdapter myListCursorAdapter) {
+        listCursorAdapter = myListCursorAdapter ;
+    }
+
+    public MyListCursorAdapter getListCursorAdapter() {
+        return listCursorAdapter;
+    }
 }

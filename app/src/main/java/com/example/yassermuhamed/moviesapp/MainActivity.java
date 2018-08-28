@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -47,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     GridLayoutManager gridLayoutManager ;
 
     ImageView mPosterPathImageView;
+
+    MyListItem myListItem = new MyListItem();
 
     Parcelable mLayoutManagerSavedState;
 
@@ -145,8 +148,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
 
-        String[] projection = {
-                MovieContract.MovieEntry.COLUMN_ID ,
+        String[] projection = {MovieContract.MovieEntry.COLUMN_ID ,
                 MovieContract.MovieEntry.COLUMN_POSTER_PATH};
 
         Uri CONTENT_URI = MovieContract.MovieEntry.CONTENT_URI;
@@ -160,6 +162,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     public void onLoadFinished(Loader loader, Cursor cursor) {
 
         mCursorAdapter = new MyListCursorAdapter(this , cursor);
+
+        myListItem.setAdapterObject(mCursorAdapter);
 
         mCursorAdapter.swapCursor(cursor);
     }
@@ -247,7 +251,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
                 displayMoviesData();
 
-                mRecyclerView.setAdapter(mCursorAdapter);
+                mRecyclerView.setAdapter( mCursorAdapter );
+
 
             }return true;
 
